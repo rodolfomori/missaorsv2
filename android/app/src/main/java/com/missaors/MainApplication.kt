@@ -1,4 +1,4 @@
-package com.missaors
+package com.rod_dolpho.missaors
 
 import android.app.Application
 import com.facebook.react.PackageList

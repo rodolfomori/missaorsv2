@@ -7198,6 +7198,8 @@ __metadata:
     prettier: 2.8.8
     react: 18.2.0
     react-native: 0.74.1
+    react-native-background-fetch: ^4.2.5
+    react-native-background-geolocation: ^4.16.1
     react-test-renderer: 18.2.0
     typescript: 5.0.4
   languageName: unknown
@@ -7947,6 +7949,22 @@ __metadata:
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
+  languageName: node
+  linkType: hard
+
+"react-native-background-fetch@npm:^4.2.5, react-native-background-fetch@npm:~4.2.5":
+  version: 4.2.5
+  resolution: "react-native-background-fetch@npm:4.2.5"
+  checksum: d124418a69377f0399b72cb86bfea5e801a4dc2d5b8215e6736fd21836a82ad514a3b89fd2915b866c205e6e7f2feddd0486d4893a0261e7d978502773397d45
+  languageName: node
+  linkType: hard
+
+"react-native-background-geolocation@npm:^4.16.1":
+  version: 4.16.1
+  resolution: "react-native-background-geolocation@npm:4.16.1"
+  dependencies:
+    react-native-background-fetch: ~4.2.5
+  checksum: 966ef4f78e9162dd4c61b52f6588b610478b3de02b4e1c39b36931225546e2b830f98d2b0f1804f5380b1e53f1eebbd51511d04f946b8306b6e513c1ba0a5fb4
   languageName: node
   linkType: hard
 

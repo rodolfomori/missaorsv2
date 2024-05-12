@@ -1,4 +1,4 @@
-package com.missaors
+package com.rod_dolpho.missaors
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

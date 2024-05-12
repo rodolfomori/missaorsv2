@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "react": "18.2.0",
-    "react-native": "0.74.1"
+    "react-native": "0.74.1",
+    "react-native-background-fetch": "^4.2.5",
+    "react-native-background-geolocation": "^4.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

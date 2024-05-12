@@ -1,118 +1,100 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {Switch, Text, View} from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import BackgroundGeolocation, {
+  Location,
+  Subscription,
+} from 'react-native-background-geolocation';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const HelloWorld = () => {
+  const [enabled, setEnabled] = React.useState(false);
+  const [location, setLocation] = React.useState('');
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  React.useEffect(() => {
+    /// 1.  Subscribe to events.
+    const onLocation: Subscription = BackgroundGeolocation.onLocation(
+      location => {
+        console.log('[onLocation]', location);
+        setLocation(JSON.stringify(location, null, 2));
+      },
+    );
+
+    const onMotionChange: Subscription = BackgroundGeolocation.onMotionChange(
+      event => {
+        console.log('[onMotionChange]', event);
+      },
+    );
+
+    const onActivityChange: Subscription =
+      BackgroundGeolocation.onActivityChange(event => {
+        console.log('[onActivityChange]', event);
+      });
+
+    const onProviderChange: Subscription =
+      BackgroundGeolocation.onProviderChange(event => {
+        console.log('[onProviderChange]', event);
+      });
+
+    /// 2. ready the plugin.
+    BackgroundGeolocation.ready({
+      // Geolocation Config
+      desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+      distanceFilter: 10,
+      // Activity Recognition
+      stopTimeout: 5,
+      // Application config
+      debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+      logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+      stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
+      startOnBoot: true, // <-- Auto start tracking when device is powered-up.
+      // HTTP / SQLite config
+      url: 'http://yourserver.com/locations',
+      batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+      autoSync: true, // <-- [Default: true] Set true to sync each location to server as it arrives.
+      headers: {
+        // <-- Optional HTTP headers
+        'X-FOO': 'bar',
+      },
+      params: {
+        // <-- Optional HTTP params
+        auth_token: 'maybe_your_server_authenticates_via_token_YES?',
+      },
+    }).then(state => {
+      setEnabled(state.enabled);
+      console.log(
+        '- BackgroundGeolocation is configured and ready: ',
+        state.enabled,
+      );
+    });
+
+    return () => {
+      // Remove BackgroundGeolocation event-subscribers when the View is removed or refreshed
+      // during development live-reload.  Without this, event-listeners will accumulate with
+      // each refresh during live-reload.
+      onLocation.remove();
+      onMotionChange.remove();
+      onActivityChange.remove();
+      onProviderChange.remove();
+    };
+  }, []);
+
+  /// 3. start / stop BackgroundGeolocation
+  React.useEffect(() => {
+    if (enabled) {
+      BackgroundGeolocation.start();
+    } else {
+      BackgroundGeolocation.stop();
+      setLocation('');
+    }
+  }, [enabled]);
+
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={{alignItems: 'center'}}>
+      <Text>Click to enable BackgroundGeolocation</Text>
+      <Switch value={enabled} onValueChange={setEnabled} />
+      <Text style={{fontFamily: 'monospace', fontSize: 12}}>{location}</Text>
     </View>
   );
-}
+};
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
+export default HelloWorld;

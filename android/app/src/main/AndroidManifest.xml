@@ -21,5 +21,6 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+      <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="d6b0425a21de232564120a6903abd7357176514e1d0387fe0da885026b803a55" />
     </application>
 </manifest>
